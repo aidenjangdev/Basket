@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basket</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .main {
+            margin: 0 12px 12px 12px;
+            width: calc(100vw - 24px);
+            height: calc(100vh - 12px);
+            background-color: white;
+            border-radius: 4px;
+        }
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 12px;
+            height: 60px;
+            width: calc(100vw - 24px);
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 1000;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        button {
+            font-size: 5vh;
+            height: 100%;
+            width: 50px;
+            border: none;
+            background-color: #ccc;
+            border-radius: 2px;
+        }
+        button:hover {
+            background-color: #aeaeae;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <button>+</button>
+    </div>
+    <div class="main">
+        
+    </div>
+</body>
+</html>
