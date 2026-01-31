@@ -5,7 +5,8 @@ const createWindow = () => {
     width: 800,
     height: 600,
     vibrancy: 'fullscreen-ui',
-    backgroundMaterial: 'acrylic'
+    backgroundMaterial: 'acrylic',
+    titleBarStyle: 'hidden',
   })
   win.setMenu(null)
   win.loadFile('app/main/index.html')
