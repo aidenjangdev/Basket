@@ -8,37 +8,47 @@
         * {
             padding: 0;
             margin: 0;
+            margin-top: 15px;
             box-sizing: border-box;
         }
+        .draggable {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 15px;
+            -webkit-app-region: drag;
+            z-index: 2000;
+        }
         .main {
-            margin: 0 12px 12px 12px;
+            margin: 82px 12px 12px 12px;
             width: calc(100vw - 24px);
-            height: calc(100vh - 12px);
+            height: calc(100vh - 112px);
             background-color: white;
             border-radius: 4px;
         }
         .nav {
+            margin: 16px 0 0 0;
             position: fixed;
             top: 0;
             left: 12px;
-            height: 60px;
+            height: 72px;
             width: calc(100vw - 24px);
-            border-bottom: 1px solid #ccc;
             display: flex;
             align-items: center;
             padding: 0 10px;
             z-index: 1000;
             box-sizing: border-box;
             border-radius: 4px;
-            padding: 5px;
+            padding: 10px 0;
         }
         button {
-            font-size: 5vh;
+            font-size: 35px;
             height: 100%;
-            width: 50px;
+            width: 54px;
             border: none;
             background-color: #ccc;
-            border-radius: 2px;
+            border-radius: 6px;
         }
         button:hover {
             background-color: #aeaeae;
@@ -47,6 +57,7 @@
     </style>
 </head>
 <body>
+    <div class="draggable"></div>
     <div class="nav">
         <button>+</button>
     </div>

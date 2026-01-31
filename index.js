@@ -7,6 +7,8 @@ const createWindow = () => {
     vibrancy: 'fullscreen-ui',
     backgroundMaterial: 'acrylic',
     titleBarStyle: 'hidden',
+    transparent: true,
+    visualEffectState: 'active',
   })
   win.setMenu(null)
   win.loadFile('app/main/index.html')
