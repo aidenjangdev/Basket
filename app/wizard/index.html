@@ -1,10 +1,354 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    body {
+        text-align: center;
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+    }
+
+    .close {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #ff5f57;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      opacity: 0.8;
+    }
+    
+    .steps {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 40px);
+    }
+
+    .step1 {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .runs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    p {
+        font-size: 20px;
+    }
+
+    img {
+        width: 90px;
+        height: 90px;
+    }
+
+    button {
+        border: none;
+        border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+        background: #dbdbdb;
+    }
+
+    button.selected {
+      border: 1px solid #bbb;
+    }
+
+    .step1 {
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .step2 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex: 1;
+    }
+    .step3 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex: 1;
+    }
+    
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: flex;
+    }
+    .runs {
+        align-items: center;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .buttons {
+      position: absolute;
+      bottom: 24px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    select {
+      margin: 0 auto;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+    input {
+        outline: none;
+        text-align: center;
+        font-size: 20px;
+        width: 250px;
+        height: 40px;
+    }
+    select {
+        text-align: none;
+        outline: none;
+        font-size: 20px;
+    }
+  </style>
+  <base href="../../">
 </head>
 <body>
-    
+  <button class="close" id="closeBtn"></button>
+  
+    <div class="steps">
+      <div class="step step1 active">
+        <p>이름을 설정하세요</p>
+        <div class="runs">
+          <input id="serverName" type="text" placeholder="서버 이름" />
+        </div>
+      </div>
+      <div class="step step2">
+        <p>실행기를 선택하세요</p>
+        <div class="runs">
+          <button id="paper">
+            <img src="assets/runners/paper.png" alt="">
+            Paper
+          </button>
+          <button id="fabric">
+            <img src="assets/runners/fabric.png" alt="">
+            Fabric
+          </button>
+          <button id="forge">
+            <img src="assets/runners/forge.jpeg" alt="">
+            Forge
+          </button>
+        </div>
+      </div>
+      <div class="step step3">
+        <p>버전을 선택하세요</p>
+        <div class="runs">
+          <select id="versionSelect">
+            <option value="">버전을 불러오는 중...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons">
+          <button id="cancelBtn">취소</button>
+          <button id="nextBtn">다음</button>
+      </div>
+    </div>
+
+  <script>
+const closeBtn = document.getElementById('closeBtn');
+const nextBtn = document.getElementById('nextBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+
+const steps = document.querySelectorAll('.step');
+let currentStep = 0;
+
+/* STEP 1: 이름 */
+const serverNameInput = document.getElementById('serverName');
+
+/* STEP 2: 실행기 */
+const runButtons = document.querySelectorAll('.step2 .runs button');
+let selectedRun = null;
+
+/* STEP 3: 버전 */
+const versionSelect = document.getElementById('versionSelect');
+
+/* ------------------ 공통 UI 업데이트 ------------------ */
+
+function showStep(index) {
+  steps.forEach(step => step.classList.remove('active'));
+  steps[index].classList.add('active');
+  currentStep = index;
+  updateButtons();
+}
+
+function updateButtons() {
+  // 왼쪽 버튼
+  cancelBtn.textContent = currentStep === 0 ? '취소' : '이전';
+
+  // 오른쪽 버튼
+  nextBtn.textContent = currentStep === steps.length - 1 ? '완료' : '다음';
+
+  // 다음 버튼 활성화 조건
+  if (currentStep === 0) {
+    nextBtn.disabled = !serverNameInput.value.trim();
+  } else if (currentStep === 1) {
+    nextBtn.disabled = !selectedRun;
+  } else {
+    nextBtn.disabled = false;
+  }
+}
+
+/* ------------------ STEP 3: 버전 로드 ------------------ */
+
+async function loadVersionsForRun(runId) {
+  versionSelect.innerHTML = '<option>불러오는 중...</option>';
+
+  try {
+    let versions = [];
+
+    if (runId === 'paper') {
+      const res = await fetch('https://api.papermc.io/v2/projects/paper');
+      const data = await res.json();
+      versions = data.versions;
+    }
+
+    if (runId === 'fabric') {
+      const res = await fetch('https://meta.fabricmc.net/v2/versions/game');
+      const data = await res.json();
+      versions = data.filter(v => v.stable).map(v => v.version);
+    }
+
+    if (runId === 'forge') {
+      const res = await fetch('https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json');
+      const data = await res.json();
+      versions = Object.keys(data.promos || {}).map(k => k.split('-')[0]);
+    }
+
+    versions = [...new Set(versions)];
+
+    if (!versions.length) {
+      versionSelect.innerHTML = '<option>버전을 찾을 수 없습니다</option>';
+      return;
+    }
+
+    versions.sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+    versionSelect.innerHTML = '';
+    versions.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      if (i === 0) opt.selected = true;
+      versionSelect.appendChild(opt);
+    });
+
+  } catch {
+    versionSelect.innerHTML = '<option>버전 불러오기 실패</option>';
+  }
+}
+
+/* ------------------ 이벤트 ------------------ */
+
+// 닫기
+closeBtn.addEventListener('click', () => {
+  window.wizardAPI.close();
+});
+
+// 이름 입력
+serverNameInput.addEventListener('input', updateButtons);
+
+// 실행기 선택
+runButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    runButtons.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedRun = btn.id;
+    loadVersionsForRun(selectedRun);
+    updateButtons();
+  });
+});
+
+// 다음 / 완료
+nextBtn.addEventListener('click', async () => {
+  if (currentStep === steps.length - 1) {
+    // UI 잠금 + 상태 표시
+    nextBtn.disabled = true;
+    cancelBtn.disabled = true;
+    nextBtn.textContent = '서버 생성 중...';
+
+    const payload = {
+      name: serverNameInput.value,
+      runner: selectedRun,
+      version: versionSelect.value
+    };
+
+    try {
+      await window.wizardAPI.createServer(payload);
+    } catch (e) {
+      nextBtn.textContent = '생성 실패';
+      return;
+    }
+
+    window.wizardAPI.close();
+    return;
+  }
+
+  showStep(currentStep + 1);
+});
+
+// 이전 / 취소
+cancelBtn.addEventListener('click', () => {
+  if (currentStep === 0) {
+    window.wizardAPI.close();
+    return;
+  }
+  showStep(currentStep - 1);
+});
+
+// 초기 상태
+showStep(0);
+  </script>
 </body>
 </html>
