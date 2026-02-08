@@ -58,6 +58,18 @@
             background: rgba(77, 77, 77, 0.25);
             font-weight: 600;
         }
+        .display { 
+            margin-left: auto;
+            height: calc(100vh - 24px);
+            width: calc(100vw - 255px);
+            background-color: white;
+        }
+        .consoleview {
+            border-radius: 12px;
+            background-color: black;
+            width: 100%;
+            height: calc(100vh - 24px);
+        }
 
     </style>
 </head>
@@ -72,6 +84,12 @@
         <div class="menu"><button>게임 룰</button></div>
     </div>
 
+    <div class="display">
+        <div class="console">
+            <div class="consoleview"></div>
+        </div>
+    </div>
+
     <script>
         var closeBtn = document.getElementById('closeBtn');
         var menuButtons = document.querySelectorAll('.menu button');
@@ -80,12 +98,10 @@
             window.editAPI.close();
         });
 
-        // 처음에 "콘솔" 선택
         if (menuButtons.length > 0) {
             menuButtons[0].classList.add('selected');
         }
 
-        // 클릭하면 selected 전환
         menuButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 menuButtons.forEach(b => b.classList.remove('selected'));
