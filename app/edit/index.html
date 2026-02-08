@@ -58,17 +58,35 @@
             background: rgba(77, 77, 77, 0.25);
             font-weight: 600;
         }
+
         .display { 
             margin-left: auto;
             height: calc(100vh - 24px);
             width: calc(100vw - 255px);
             background-color: white;
         }
+
+        .display > div {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .display > div.active {
+            display: block;
+        }
+
         .consoleview {
             border-radius: 12px;
             background-color: black;
             width: 100%;
-            height: calc(100vh - 24px);
+            height: 100%;
+            color: white;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .dih {
+            padding: 12px;
         }
 
     </style>
@@ -77,22 +95,40 @@
     <button class="close" id="closeBtn"></button>
 
     <div class="sidebar">
-        <div class="menu"><button>콘솔</button></div>
-        <div class="menu"><button>플러그인</button></div>
-        <div class="menu"><button>일반</button></div>
-        <div class="menu"><button>서버 속성</button></div>
-        <div class="menu"><button>게임 룰</button></div>
+        <div class="menu" id="console"><button data-view="console">콘솔</button></div>
+        <div class="menu" id="plugins"><button data-view="plugins">플러그인</button></div>
+        <div class="menu" id="general"><button data-view="general">일반</button></div>
+        <div class="menu" id="properties"><button data-view="properties">서버 속성</button></div>
+        <div class="menu" id="gamerule"><button data-view="gamerule">게임 룰</button></div>
     </div>
 
     <div class="display">
-        <div class="console">
-            <div class="consoleview"></div>
+        <div class="console active">
+            <div class="consoleview">
+                <div class="dih">
+                    when im back in chicago i feel it
+                </div>
+                <input type="text">
+            </div>
+        </div>
+        <div class="plugins">
+            <h2>플러그인</h2>
+        </div>
+        <div class="general">
+            <h2>일반</h2>
+        </div>
+        <div class="properties">
+            <h2>서버 속성</h2>
+        </div>
+        <div class="gamerule">
+            <h2>게임 룰</h2>
         </div>
     </div>
 
     <script>
         var closeBtn = document.getElementById('closeBtn');
         var menuButtons = document.querySelectorAll('.menu button');
+        var displaySections = document.querySelectorAll('.display > div');
 
         closeBtn.addEventListener('click', () => {
             window.editAPI.close();
@@ -106,6 +142,14 @@
             btn.addEventListener('click', () => {
                 menuButtons.forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
+
+                displaySections.forEach(section => section.classList.remove('active'));
+
+                var viewName = btn.getAttribute('data-view');
+                var targetSection = document.querySelector('.display > .' + viewName);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
             });
         });
     </script>
