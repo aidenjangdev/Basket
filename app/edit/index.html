@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        body {
+            padding: 12px;
+        }
+
+        .close {
+            z-index: 1;
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: #ff5f57;
+            cursor: pointer;    
+        }
+
+        .close:hover {
+            opacity: 0.8;
+        }
+
+        .sidebar {
+            position: fixed;
+            z-index: 0;
+            padding: 40px 10px 10px 10px;
+            border-radius: 12px;
+            height: calc(100vh - 74px);
+            width: 200px;
+            background-color: #eee;
+        }
+
+        .menu button {
+            height: 40px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: 100%;
+            border: none;
+            margin-bottom: 9px;
+        }
+
+        .menu button:hover {
+            cursor: pointer;
+            background: rgba(77, 77, 77, 0.162);
+        }
+
+        .menu button.selected {
+            background: rgba(77, 77, 77, 0.25);
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <button class="close" id="closeBtn"></button>
+
+    <div class="sidebar">
+        <div class="menu"><button>콘솔</button></div>
+        <div class="menu"><button>플러그인</button></div>
+        <div class="menu"><button>일반</button></div>
+        <div class="menu"><button>서버 속성</button></div>
+        <div class="menu"><button>게임 룰</button></div>
+    </div>
+
+    <script>
+        var closeBtn = document.getElementById('closeBtn');
+        var menuButtons = document.querySelectorAll('.menu button');
+
+        closeBtn.addEventListener('click', () => {
+            window.editAPI.close();
+        });
+
+        // 처음에 "콘솔" 선택
+        if (menuButtons.length > 0) {
+            menuButtons[0].classList.add('selected');
+        }
+
+        // 클릭하면 selected 전환
+        menuButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                menuButtons.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+    </script>
+
+</body>
+</html>

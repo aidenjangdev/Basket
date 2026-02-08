@@ -25,13 +25,13 @@
         .main {
             margin: 82px 12px 12px 12px;
             width: calc(100vw - 24px);
-            height: calc(100vh - 112px);
+            height: calc(100vh - 94px);
             background-color: white;
             border-radius: 4px;
             padding: 12px;
         }
         .nav {
-            margin: 16px 0 0 0;
+            margin: 2px 0 0 0;
             position: fixed;
             top: 0;
             left: 12px;
@@ -43,13 +43,13 @@
             z-index: 1000;
             box-sizing: border-box;
             border-radius: 4px;
-            padding: 10px 0;
+            padding: 3px 0;
         }
-        button {
+        .nav button {
             margin-right: 11px;
             font-size: 35px;
             height: 100%;
-            width: 54px;
+            width: 70px;
             border: none;
             background-color: #ccc;
             border-radius: 6px;
@@ -57,19 +57,71 @@
             align-items: center;
             justify-content: center;
         }
-        button:hover {
+        .nav button:hover {
             background-color: #aeaeae;
             cursor: pointer;
         }
-        button img { 
-            margin-bottom: 14px;
+        .nav button img { 
             width: 40px;
             display: block;
         }
         .template {
-            background-color: black;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            background: white;
+            border-radius: 5px;
+            border: 2px solid #eee;
             width: 100%;
-            height: 100px;
+            height: 110px;
+            padding: 15px 0 15px 20px;
+        }
+        .left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .title {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+        .title h1 {
+            font-size: 24px;
+        }
+        .title span {
+            color: #666;
+            font-size: 14px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .buttons button {
+            padding: 8px 24px;
+            font-size: 14px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            background-color: #45a049;
+        }
+        .buttons button:last-child {
+            background-color: #2196F3;
+        }
+        .buttons button:last-child:hover {
+            background-color: #0b7dda;
+        }
+        .console {
+            flex: 1;
+            background-color: #000000;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            margin: -15px -2px -15px 0;
         }
     </style>
     <base href="../../">
@@ -82,11 +134,27 @@
     </div>
     <div class="main">
         <div class="template">
-            
+            <div class="left">
+                <div class="title">
+                    <h1>서버제목</h1>
+                    <span>1.21.11</span>
+                </div>
+                <div class="buttons">
+                    <button id="start">시작</button>
+                    <button id="edit">편집</button>
+                </div>
+            </div>
+            <div class="console">
+                
+            </div>
         </div>
     </div>
 
     <script>
+        document.getElementById('edit').addEventListener('click', () => {
+            window.electronAPI.serveredit();
+        });
+
         document.getElementById('openWizard').addEventListener('click', () => {
             window.electronAPI.openWizard();
         });

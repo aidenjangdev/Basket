@@ -1,3 +1,4 @@
+// main.js (index.js)
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path');
 const https = require('https');
@@ -5,20 +6,32 @@ const fs = require('fs');
 
 let mainWindow;
 let wizardWindow = null;
+let editWindow = null;
+
+const isMac = process.platform === 'darwin';
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    vibrancy: 'fullscreen-ui',
-    backgroundMaterial: 'acrylic',
-    titleBarStyle: 'hidden',
-    transparent: true,
-    visualEffectState: 'active',
+
+    // macOS 전용
+    vibrancy: isMac ? 'fullscreen-ui' : undefined,
+    visualEffectState: isMac ? 'active' : undefined,
+    titleBarStyle: isMac ? 'hidden' : 'default',
+
+    // Windows 전용
+    backgroundColor: undefined,
+    backgroundMaterial: isMac ? undefined :'acrylic',
+    transparent: isMac,
+    frame: !isMac,
+    
+
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+
   mainWindow.setMenu(null)
   mainWindow.loadFile('app/main/index.html')
 }
@@ -49,9 +62,41 @@ ipcMain.handle('open-wizard', () => {
   });
 });
 
+ipcMain.handle('serveredit', () => {
+  if (editWindow && !editWindow.isDestroyed()) {
+    editWindow.focus();
+    return;
+  }
+
+  editWindow = new BrowserWindow({
+    width: 700,
+    height: 500,
+    parent: mainWindow,
+    modal: true,
+    resizable: false,
+    titleBarStyle: 'hidden',
+    webPreferences: {
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  });
+
+  editWindow.loadFile('app/edit/index.html');
+
+  editWindow.on('closed', () => {
+    editWindow = null;
+  });
+});
+
 ipcMain.on('close-wizard', () => {
   if (wizardWindow && !wizardWindow.isDestroyed()) {
     wizardWindow.close();
+  }
+});
+
+ipcMain.on('close-edit', () => {
+  if (editWindow && !editWindow.isDestroyed()) {
+    editWindow.close();
   }
 });
 
