@@ -45,8 +45,25 @@
             border-radius: 4px;
             padding: 3px 0;
         }
-        .nav button {
+        
+        /* Windows 스타일 (기본) */
+        .nav.windows {
+            justify-content: flex-start;
+        }
+        .nav.windows button {
             margin-right: 11px;
+        }
+        
+        /* macOS 스타일 */
+        .nav.macos {
+            justify-content: flex-end;
+            padding-top: 12px;
+        }
+        .nav.macos button {
+            margin-left: 11px;
+        }
+        
+        .nav button {
             font-size: 35px;
             height: 100%;
             width: 70px;
@@ -56,6 +73,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            -webkit-app-region: no-drag;
         }
         .nav button:hover {
             background-color: #aeaeae;
@@ -151,6 +169,11 @@
     </div>
 
     <script>
+        // OS 감지 및 클래스 추가
+        const nav = document.querySelector('.nav');
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        nav.classList.add(isMac ? 'macos' : 'windows');
+        
         document.getElementById('edit').addEventListener('click', () => {
             window.electronAPI.serveredit();
         });

@@ -8,11 +8,9 @@
         * {
             margin: 0;
         }
-
         body {
             padding: 12px;
         }
-
         .close {
             z-index: 1;
             position: fixed;
@@ -25,11 +23,9 @@
             background: #ff5f57;
             cursor: pointer;    
         }
-
         .close:hover {
             opacity: 0.8;
         }
-
         .sidebar {
             position: fixed;
             z-index: 0;
@@ -39,7 +35,6 @@
             width: 200px;
             background-color: #eee;
         }
-
         .menu button {
             height: 40px;
             border-radius: 5px;
@@ -48,34 +43,28 @@
             border: none;
             margin-bottom: 9px;
         }
-
         .menu button:hover {
             cursor: pointer;
             background: rgba(77, 77, 77, 0.162);
         }
-
         .menu button.selected {
             background: rgba(77, 77, 77, 0.25);
             font-weight: 600;
         }
-
         .display { 
             margin-left: auto;
             height: calc(100vh - 24px);
             width: calc(100vw - 255px);
             background-color: white;
         }
-
         .display > div {
             display: none;
             width: 100%;
             height: 100%;
         }
-
         .display > div.active {
             display: block;
         }
-
         .consoleview {
             border-radius: 12px;
             background-color: black;
@@ -83,17 +72,93 @@
             height: 100%;
             color: white;
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
         }
-
         .dih {
             padding: 12px;
+            flex: 1;
+            overflow-y: auto;
         }
-
+        .cmd-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            gap: 8px;
+        }
+        .cmd-wrapper span {
+            font-size: 14px;
+            color: white;
+        }
+        .cmd {
+            flex: 1;
+            background-color: transparent;
+            color: white;
+            border: none;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+        .plugins {
+            border-radius: 12px;
+            position: relative;
+            overflow-y: auto;
+        }
+        .plugins.dragover .plarea {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+        .plarea {
+            padding-bottom: 64px;
+        }
+        .columns {
+            width: 100%;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            box-sizing: border-box;
+        }
+        .columnsb {
+            width: 100%;
+            height: 45px;
+            background-color: rgba(238, 238, 238, 0.751);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            box-sizing: border-box;
+        }
+        .add {
+            display: none;
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            width: calc(100vw - 255px);
+            padding: 12px;
+            justify-content: center;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        .add.visible {
+            display: flex;
+        }
+        .add button {
+            width: 100%;
+            height: 40px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <button class="close" id="closeBtn"></button>
-
     <div class="sidebar">
         <div class="menu" id="console"><button data-view="console">콘솔</button></div>
         <div class="menu" id="plugins"><button data-view="plugins">플러그인</button></div>
@@ -101,18 +166,41 @@
         <div class="menu" id="properties"><button data-view="properties">서버 속성</button></div>
         <div class="menu" id="gamerule"><button data-view="gamerule">게임 룰</button></div>
     </div>
-
     <div class="display">
         <div class="console active">
             <div class="consoleview">
                 <div class="dih">
-                    when im back in chicago i feel it
+                    서버가 꺼져있습니다.
                 </div>
-                <input type="text">
+                <div class="cmd-wrapper">
+                    <span>></span>
+                    <input type="text" class="cmd">
+                </div>
             </div>
         </div>
-        <div class="plugins">
-            <h2>플러그인</h2>
+        <div class="plugins" id="pluginsContainer">
+            <div class="plarea" id="plarea">
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+                <div class="columns"></div>
+                <div class="columnsb"></div>
+            </div>
         </div>
         <div class="general">
             <h2>일반</h2>
@@ -124,11 +212,15 @@
             <h2>게임 룰</h2>
         </div>
     </div>
+    <div class="add" id="addBtn"><button>추가</button></div>
 
     <script>
         var closeBtn = document.getElementById('closeBtn');
         var menuButtons = document.querySelectorAll('.menu button');
         var displaySections = document.querySelectorAll('.display > div');
+        var pluginsContainer = document.getElementById('pluginsContainer');
+        var plarea = document.getElementById('plarea');
+        var addBtn = document.getElementById('addBtn');
 
         closeBtn.addEventListener('click', () => {
             window.editAPI.close();
@@ -150,8 +242,69 @@
                 if (targetSection) {
                     targetSection.classList.add('active');
                 }
+
+                // 플러그인 탭일 때만 추가 버튼 표시
+                if (viewName === 'plugins') {
+                    addBtn.classList.add('visible');
+                } else {
+                    addBtn.classList.remove('visible');
+                }
             });
         });
+
+        // 드래그 앤 드롭 기능
+        plarea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            pluginsContainer.classList.add('dragover');
+        });
+
+        plarea.addEventListener('dragleave', () => {
+            pluginsContainer.classList.remove('dragover');
+        });
+
+        plarea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            pluginsContainer.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            
+            for (let file of files) {
+                addFileToSlot(file.name);
+            }
+        });
+
+        function addFileToSlot(fileName) {
+            // 빈 칸 찾기
+            const allSlots = plarea.querySelectorAll('.columns, .columnsb');
+            let emptySlot = null;
+
+            for (let slot of allSlots) {
+                if (slot.textContent.trim() === '') {
+                    emptySlot = slot;
+                    break;
+                }
+            }
+
+            // 빈 칸이 없으면 새로 추가
+            if (!emptySlot) {
+                const lastSlot = allSlots[allSlots.length - 1];
+                const isColumnsb = lastSlot.classList.contains('columnsb');
+                
+                // 교차되게 추가
+                const newSlot1 = document.createElement('div');
+                newSlot1.className = isColumnsb ? 'columns' : 'columnsb';
+                plarea.appendChild(newSlot1);
+
+                const newSlot2 = document.createElement('div');
+                newSlot2.className = isColumnsb ? 'columnsb' : 'columns';
+                plarea.appendChild(newSlot2);
+
+                emptySlot = newSlot1;
+            }
+
+            // 파일 이름 추가
+            emptySlot.textContent = fileName;
+        }
     </script>
 
 </body>
